@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+/Pochio/Library
+/Pochio/Logs
+/Pochio/obj
