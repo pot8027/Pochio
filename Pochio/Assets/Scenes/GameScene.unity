@@ -4288,6 +4288,7 @@ MonoBehaviour:
   LadderSpeed: 5
   JumpHeight: 2.5
   JumpLimitTime: 3
+  JumpMaxCount: 3
   DashCurve:
     serializedVersion: 2
     m_Curve:

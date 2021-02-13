@@ -37,8 +37,6 @@ public class AppearBlock : MonoBehaviour
             // ブロックの下面か判定
             var isXRange = _pointLeft <= collisionPosition.x + sprite.size.x && collisionPosition.x <= _pointRight;
 
-            Debug.Log($"x={collisionDirection.x}, y={collisionDirection.y}");
-
             if (collisionDirection.y <= 0 && isXRange)
             {
                 this.tag = "Ground";
