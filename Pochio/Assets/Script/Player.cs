@@ -11,7 +11,10 @@ public class Player : MonoBehaviour
     
     [Header("ジャンプ速度")]
     public float JumpSpeed = 1.0f;
-    
+
+    [Header("はしご移動速度")]
+    public float LadderSpeed = 1.0f;
+
     [Header("ジャンプ可能高さ")]
     public float JumpHeight = 0.0f;
     
@@ -23,19 +26,27 @@ public class Player : MonoBehaviour
 
     [Header("ジャンプ速度カーブ")]
     public AnimationCurve JumpCurve;
-    
+
+    [Header("落下速度カーブ")]
+    public AnimationCurve FallCurve;
+
     [Header("接地チェック")]
     public GroundCheck Ground;
     
     [Header("頭ぶつけチェック")]
     public GroundCheck Head;
+    
+    [Header("はしご重なりチェック")]
+    public LadderCheck Ladder;
 
     private bool _isJump = false;
+    private bool _isFall = false;
     private float _jumpPos = 0.0f;   
     private float _dashTime = 0.0f;
     private float _jumpTime = 0.0f;
+    private float _fallTime = 0.0f;
     private bool _canJumpKey = true;
-    private bool _isDown = false;
+    private bool _isLadder = false;
     private float _beforeKey;
     private Animator _anim = null;
     private Rigidbody2D _rigidBody2D;
@@ -54,10 +65,13 @@ public class Player : MonoBehaviour
     {
         // 入力キー取得
         float horizontalKey = Input.GetAxis("Horizontal");
+        float verticalKey = Input.GetAxis("Vertical");
         float jumpKey = Input.GetAxis("JoyPadCross");
 
         // 接地判定
         bool isGround = Ground.IsGround();
+        
+        // 天井判定
         bool isHead = Head.IsGround();
         if (isGround && isHead)
         {
@@ -65,12 +79,15 @@ public class Player : MonoBehaviour
             isHead = Head.IsGround();
         }
 
+        // はしごつかまり判定
+        _isLadder = Ladder.IsLadderOn;
+
         // ダッシュ時間計算
         _dashTime = CalcDashTime(horizontalKey);
 
         // 速度計算
         float localSpeedX = CalcXSpeed(horizontalKey);
-        float localSpeedY = CalcSpeedY(jumpKey, isGround, isHead);
+        float localSpeedY = CalcSpeedY(jumpKey, isGround, isHead, verticalKey);
         _rigidBody2D.velocity = new Vector2(localSpeedX, localSpeedY);
         
         // アニメーション更新
@@ -110,13 +127,13 @@ public class Player : MonoBehaviour
     /// Y方向速度を計算する
     /// </summary>
     /// <returns>Y方向速度</returns>
-    private float CalcSpeedY(float verticalKey, bool isGround, bool isHead)
+    private float CalcSpeedY(float jumpKey, bool isGround, bool isHead, float verticalKey)
     {
         float result = -Gravity;
 
         if (isGround)
         {
-            if (verticalKey > 0)
+            if (jumpKey > 0)
             {
                 if (_canJumpKey)
                 {
@@ -129,6 +146,7 @@ public class Player : MonoBehaviour
             else
             {
                 _isJump = false;
+                _isFall = false;
                 _canJumpKey = true;
             }
         }
@@ -137,7 +155,7 @@ public class Player : MonoBehaviour
             _canJumpKey = false;
 
             //上方向キーを押しているか
-            bool isPushUpKey = verticalKey > 0;
+            bool isPushUpKey = jumpKey > 0;
 
             //現在の高さが飛べる高さより下か
 
@@ -150,18 +168,54 @@ public class Player : MonoBehaviour
             {
                 result = JumpSpeed;
                 _jumpTime += Time.deltaTime;
+                _isFall = false;
+                _fallTime = 0.0f;
             }
             else
             {
                 _isJump = false;
+                _isFall = true;
                 _jumpTime = 0.0f;
-                //Debug.Log("落下します");
+            }
+        }
+        else if (_isFall)
+        {
+            // はしごに捕まっている間は落下速度0
+            if (_isLadder)
+            {
+                _fallTime = 0.0f;
+            }
+            else
+            {
+                _fallTime += Time.deltaTime;
             }
         }
 
         if (_isJump)
         {
             result *= JumpCurve.Evaluate(_jumpTime);
+        }
+
+        else if (_isFall)
+        {
+            result *= FallCurve.Evaluate(_fallTime);
+        }
+
+        // はしご中は速度一定
+        if (_isLadder)
+        {
+            if (verticalKey > 0)
+            {
+                result = LadderSpeed;
+            }
+            else if (verticalKey < 0)
+            {
+                result = -LadderSpeed;
+            }
+            else
+            {
+                result = 0.0f;
+            }
         }
 
         return result;
@@ -198,6 +252,10 @@ public class Player : MonoBehaviour
 
         // ジャンプ中はジャンプモーション
         if (_isJump)
+        {
+            _anim.Play("player_jump");
+        }
+        else if (_isLadder)
         {
             _anim.Play("player_jump");
         }
