@@ -8,6 +8,9 @@ TagManager:
   - Enemy
   - Ladder
   - MoveGround
+  - DeadGround
+  - Undefined
+  - Dead
   layers:
   - Default
   - TransparentFX
@@ -44,6 +47,9 @@ TagManager:
   m_SortingLayers:
   - name: BackGround
     uniqueID: 1648123861
+    locked: 0
+  - name: BackGroundObject
+    uniqueID: 2291867437
     locked: 0
   - name: Default
     uniqueID: 0

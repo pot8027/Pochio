@@ -43,6 +43,9 @@ public class Player : MonoBehaviour
     [Header("はしご重なりチェック")]
     public LadderCheck Ladder;
 
+    [Header("開始位置")]
+    public GameObject StartPoint;
+
     private bool _isJump = false;
     private bool _isFall = false;
     private float _jumpPos = 0.0f;   
@@ -320,7 +323,11 @@ public class Player : MonoBehaviour
         }
         else if (_isLadder)
         {
-            _anim.Play("player_jump");
+            _anim.Play("player_clumb");
+        }
+        else if (_isFall)
+        {
+            _anim.Play("player_fall");
         }
         else if (isGround)
         {
@@ -336,7 +343,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            _anim.Play("player_jump");
+            _anim.Play("player_fall");
         }
 
         // 向き更新
@@ -364,6 +371,11 @@ public class Player : MonoBehaviour
                     _moveLand = collision.gameObject.GetComponent<MoveLand>();
                 }
             }
+        }
+
+        else if (collision.collider.tag == Tag.DEAD_TAG)
+        {
+            transform.position = StartPoint.transform.position;
         }
     }
 
