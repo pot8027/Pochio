@@ -256,6 +256,11 @@ public class Player : MonoBehaviour
                 _fallTime += Time.deltaTime;
             }
         }
+        else
+        {
+            _isFall = true;
+            _fallTime = 0.0f;
+        }
 
         if (_isJump)
         {
@@ -323,7 +328,14 @@ public class Player : MonoBehaviour
         }
         else if (_isLadder)
         {
-            _anim.Play("player_clumb");
+            if (_verticalKey != 0)
+            {
+                _anim.Play("player_clumb");
+            }
+            else
+            {
+                _anim.Play("player_clumb_stop");
+            }
         }
         else if (_isFall)
         {
