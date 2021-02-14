@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script;
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -56,6 +57,7 @@ public class Player : MonoBehaviour
     private Animator _anim = null;
     private Rigidbody2D _rigidBody2D;
     private CapsuleCollider2D _capsuleCollider2D;
+    private MoveLand _moveLand = null;
 
     // キー入力
     private float _horizontalKey;
@@ -101,7 +103,7 @@ public class Player : MonoBehaviour
         float localSpeedX = CalcXSpeed();
         float localSpeedY = CalcSpeedY(isGround, isHead);
         _rigidBody2D.velocity = new Vector2(localSpeedX, localSpeedY);
-        
+
         // アニメーション更新
         UpdateAnimation(isGround);
     }
@@ -131,6 +133,11 @@ public class Player : MonoBehaviour
         }
 
         result *= DashCurve.Evaluate(_dashTime);
+
+        if (_moveLand != null)
+        {
+            result += _moveLand.GetVelocity().x;
+        }
 
         return result;
     }
@@ -340,6 +347,31 @@ public class Player : MonoBehaviour
         else if (_horizontalKey < 0)
         {
             transform.localScale = new Vector2(-absLocalScaleX, absLocalScaleY);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == Tag.MOVE_GROUND_TAG)
+        {
+            var stepOnHeight = _capsuleCollider2D.size.y * 0.9f;
+            float judgPosY = transform.position.y - (_capsuleCollider2D.size.y / 2f) + stepOnHeight;
+            foreach (var p in collision.contacts)
+            {
+                // 動く地面に乗っていれば取得
+                if (p.point.y < judgPosY)
+                {
+                    _moveLand = collision.gameObject.GetComponent<MoveLand>();
+                }
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == Tag.MOVE_GROUND_TAG)
+        {
+            _moveLand = null;
         }
     }
 }

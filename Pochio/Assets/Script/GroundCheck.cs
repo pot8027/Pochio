@@ -1,27 +1,14 @@
-﻿using System.Collections;
+﻿using Assets.Script;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    private static readonly string GROUND_TAG = "Ground";
-
     private bool _isGround = false;
     private bool _isEnter = false;
     private bool _isStay = false;
     private bool _isExit = false;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public bool IsGround()
     {
@@ -48,29 +35,38 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag.Equals(GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND_TAG))
         {
-            //Debug.Log("何かが入った");
+            _isEnter = true;
+        }
+
+        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        {
             _isEnter = true;
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag.Equals(GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND_TAG))
         {
-            //Debug.Log("何かが入っている");
+            _isStay = true;
+        }
+        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        {
             _isStay = true;
         }
     }
 
     public void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag.Equals(GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND_TAG))
         {
-            //Debug.Log("何かが出た");
             _isExit = true;
         }
-        
+        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        {
+            _isExit = true;
+        }
     }
 }
