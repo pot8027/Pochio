@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using Assets.Script.Extend;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AppearBlock : MonoBehaviour
 {
+    [Header("初期透明度")]
+    public float DefaultAlpha;
+
     private BoxCollider2D _boxCollider2d = null;
     private Rigidbody2D _rididBody2d = null;
     private SpriteRenderer _spriteRenderer = null;
@@ -16,7 +20,8 @@ public class AppearBlock : MonoBehaviour
         _rididBody2d = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        _spriteRenderer.enabled = false;
+        //_spriteRenderer.enabled = false;
+        _spriteRenderer.SetAlpha(DefaultAlpha);
 
         var adjustPoint = _spriteRenderer.bounds.size.x / 5;
         _pointLeft = _rididBody2d.transform.position.x + adjustPoint;
@@ -40,7 +45,8 @@ public class AppearBlock : MonoBehaviour
             if (collisionDirection.y <= 0 && isXRange)
             {
                 this.tag = "Ground";
-                _spriteRenderer.enabled = true;
+                //_spriteRenderer.enabled = true;
+                _spriteRenderer.SetAlpha(1f);
                 _boxCollider2d.isTrigger = false;
             }
         }
