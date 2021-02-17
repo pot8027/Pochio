@@ -2,8 +2,13 @@
 {
     public static class Tag
     {
-        public static readonly string GROUND_TAG = "Ground";
-        public static readonly string MOVE_GROUND_TAG = "MoveGround";
-        public static readonly string DEAD_TAG = "Dead";
+        public static readonly string GROUND = "Ground";
+        public static readonly string MOVE_GROUND = "MoveGround";
+        public static readonly string DEAD = "Dead";
+
+        public static readonly string JUMP_ITEM = "JumpItem";
+        public static readonly string SPEED_ITEM = "SpeedItem";
+
+        public static readonly string RESTART_ITEM = "RestartItem";
     }
 }

@@ -49,9 +49,6 @@ public class Player : MonoBehaviour
     [Header("はしご重なりチェック")]
     public LadderCheck Ladder;
 
-    [Header("開始位置")]
-    public GameObject StartPoint;
-
     private bool _isJump = false;
     private bool _isFall = false;
     private float _jumpPos = 0.0f;   
@@ -61,8 +58,6 @@ public class Player : MonoBehaviour
     private bool _canJumpKey = true;
     private bool _isGround = false;
     private bool _isHead = false;
-    private bool _isLeftWall = false;
-    private bool _isRightWall = false;
     private bool _isLadder = false;
     private int _currentJumpCount = 0;
     private bool _releaseJumpKey = true;
@@ -71,6 +66,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rigidBody2D;
     private CapsuleCollider2D _capsuleCollider2D;
     private MoveLand _moveLand = null;
+    private int _speedXCount = 1;
+    private Vector2 _startPoint;
 
     // キー入力
     private float _horizontalKey;
@@ -124,23 +121,6 @@ public class Player : MonoBehaviour
         {
             Head.Reset();
             _isHead = Head.IsGround();
-        }
-
-        // 壁判定
-        _isLeftWall = false;
-        _isRightWall = false;
-        if (_isGround == false)
-        {
-            if (LeftWall.IsGround())
-            {
-                _isLeftWall = true;
-                Debug.Log("左壁接地");
-            }
-            else if (RightWall.IsGround())
-            {
-                _isRightWall = true;
-                Debug.Log("右壁接地");
-            }
         }
 
         // はしごつかまり判定
@@ -407,7 +387,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag == Tag.MOVE_GROUND_TAG)
+        if (collision.collider.tag == Tag.MOVE_GROUND)
         {
             var stepOnHeight = _capsuleCollider2D.size.y * 0.9f;
             float judgPosY = transform.position.y - (_capsuleCollider2D.size.y / 2f) + stepOnHeight;
@@ -421,17 +401,63 @@ public class Player : MonoBehaviour
             }
         }
 
-        else if (collision.collider.tag == Tag.DEAD_TAG)
+        else if (collision.collider.tag == Tag.DEAD)
         {
-            transform.position = StartPoint.transform.position;
+            transform.position = _startPoint;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.tag == Tag.MOVE_GROUND_TAG)
+        if (collision.collider.tag == Tag.MOVE_GROUND)
         {
             _moveLand = null;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == Tag.JUMP_ITEM)
+        {
+            if (collision.enabled == false)
+            {
+                return;
+            }
+            collision.enabled = false;
+
+            JumpMaxCount++;
+            var jumpCount = GameObject.Find("JumpCount").GetComponent<TextManager>();
+            jumpCount.SetText(JumpMaxCount.ToString());
+
+            Destroy(collision.gameObject);
+        }
+
+        else if (collision.tag == Tag.SPEED_ITEM)
+        {
+            if (collision.enabled == false)
+            {
+                return;
+            }
+            collision.enabled = false;
+
+            _speedXCount++;
+            SpeedX += 2.0f;
+            var jumpCount = GameObject.Find("PlayerSpeed").GetComponent<TextManager>();
+            jumpCount.SetText(_speedXCount.ToString());
+
+            Destroy(collision.gameObject);
+        }
+
+        else if (collision.tag == Tag.RESTART_ITEM)
+        {
+            if (collision.enabled == false)
+            {
+                return;
+            }
+            collision.enabled = false;
+            _startPoint = collision.gameObject.transform.position;
+
+            Destroy(collision.gameObject);
         }
     }
 }

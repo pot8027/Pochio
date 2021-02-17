@@ -35,12 +35,12 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag.Equals(Tag.GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND))
         {
             _isEnter = true;
         }
 
-        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        else if (collision.tag.Equals(Tag.MOVE_GROUND))
         {
             _isEnter = true;
         }
@@ -48,11 +48,11 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag.Equals(Tag.GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND))
         {
             _isStay = true;
         }
-        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        else if (collision.tag.Equals(Tag.MOVE_GROUND))
         {
             _isStay = true;
         }
@@ -60,11 +60,11 @@ public class GroundCheck : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag.Equals(Tag.GROUND_TAG))
+        if (collision.tag.Equals(Tag.GROUND))
         {
             _isExit = true;
         }
-        else if (collision.tag.Equals(Tag.MOVE_GROUND_TAG))
+        else if (collision.tag.Equals(Tag.MOVE_GROUND))
         {
             _isExit = true;
         }

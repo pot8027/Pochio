@@ -11,6 +11,9 @@ TagManager:
   - DeadGround
   - Undefined
   - Dead
+  - JumpItem
+  - SpeedItem
+  - RestartItem
   layers:
   - Default
   - TransparentFX
@@ -53,4 +56,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 137903203
     locked: 0
