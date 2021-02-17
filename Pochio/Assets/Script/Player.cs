@@ -39,7 +39,13 @@ public class Player : MonoBehaviour
     
     [Header("頭ぶつけチェック")]
     public GroundCheck Head;
-    
+
+    [Header("左壁チェック")]
+    public GroundCheck LeftWall;
+
+    [Header("右壁チェック")]
+    public GroundCheck RightWall;
+
     [Header("はしご重なりチェック")]
     public LadderCheck Ladder;
 
@@ -53,6 +59,10 @@ public class Player : MonoBehaviour
     private float _jumpTime = 0.0f;
     private float _fallTime = 0.0f;
     private bool _canJumpKey = true;
+    private bool _isGround = false;
+    private bool _isHead = false;
+    private bool _isLeftWall = false;
+    private bool _isRightWall = false;
     private bool _isLadder = false;
     private int _currentJumpCount = 0;
     private bool _releaseJumpKey = true;
@@ -85,30 +95,56 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // 接地判定
-        bool isGround = Ground.IsGround();
-        
-        // 天井判定
-        bool isHead = Head.IsGround();
-        if (isGround && isHead)
-        {
-            Head.Reset();
-            isHead = Head.IsGround();
-        }
-
-        // はしごつかまり判定
-        _isLadder = Ladder.IsLadderOn;
+        // 接地状態更新
+        UpdateCollisionStatus();
 
         // ダッシュ時間計算
         _dashTime = CalcDashTime(_horizontalKey);
 
         // 速度計算
         float localSpeedX = CalcXSpeed();
-        float localSpeedY = CalcSpeedY(isGround, isHead);
+        float localSpeedY = CalcSpeedY();
         _rigidBody2D.velocity = new Vector2(localSpeedX, localSpeedY);
 
         // アニメーション更新
-        UpdateAnimation(isGround);
+        UpdateAnimation();
+    }
+
+    /// <summary>
+    /// 地形接触状態を更新する
+    /// </summary>
+    private void UpdateCollisionStatus()
+    {
+        // 接地判定
+        _isGround = Ground.IsGround();
+
+        // 天井判定
+        _isHead = Head.IsGround();
+        if (_isGround && _isHead)
+        {
+            Head.Reset();
+            _isHead = Head.IsGround();
+        }
+
+        // 壁判定
+        _isLeftWall = false;
+        _isRightWall = false;
+        if (_isGround == false)
+        {
+            if (LeftWall.IsGround())
+            {
+                _isLeftWall = true;
+                Debug.Log("左壁接地");
+            }
+            else if (RightWall.IsGround())
+            {
+                _isRightWall = true;
+                Debug.Log("右壁接地");
+            }
+        }
+
+        // はしごつかまり判定
+        _isLadder = Ladder.IsLadderOn;
     }
 
     /// <summary>
@@ -149,14 +185,14 @@ public class Player : MonoBehaviour
     /// Y方向速度を計算する
     /// </summary>
     /// <returns>Y方向速度</returns>
-    private float CalcSpeedY(bool isGround, bool isHead)
+    private float CalcSpeedY()
     {
         float result = -Gravity;
 
         // ジャンプキーを押しているか
         bool isPressJumpKey = _jumpKey > 0;
 
-        if (isGround)
+        if (_isGround)
         {
             _currentJumpCount = 0;
             if (_jumpKey > 0)
@@ -210,7 +246,7 @@ public class Player : MonoBehaviour
             //ジャンプ時間が長くなりすぎてないか
             bool canTime = JumpLimitTime > _jumpTime;
 
-            if (isPressJumpKey && canHeight && canTime && isHead == false)
+            if (isPressJumpKey && canHeight && canTime && _isHead == false)
             {
                 result = JumpSpeed;
                 _jumpTime += Time.deltaTime;
@@ -316,7 +352,7 @@ public class Player : MonoBehaviour
     /// アニメーション更新
     /// </summary>
     /// <param name="horizontalKey">横ボタン</param>
-    private void UpdateAnimation(bool isGround)
+    private void UpdateAnimation()
     {
         var absLocalScaleX = Math.Abs(transform.localScale.x);
         var absLocalScaleY = Math.Abs(transform.localScale.y);
@@ -341,7 +377,7 @@ public class Player : MonoBehaviour
         {
             _anim.Play("player_fall");
         }
-        else if (isGround)
+        else if (_isGround)
         {
             // 地面にいて横入力がない場合は待ち
             if (_horizontalKey == 0)
