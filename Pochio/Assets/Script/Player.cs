@@ -508,7 +508,7 @@ public class Player : MonoBehaviour
             if (_cherryCount >= GoalScore)
             {
                 _timerManager.TimerStop();
-                ClearText.SetActive(true);
+                ClearText.GetComponent<Text>().enabled = true;
             }
         }
 
