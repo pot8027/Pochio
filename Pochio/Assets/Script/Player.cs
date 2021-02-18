@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         _goalScoreText = GoalText.GetComponent<TextManager>();
-        _goalScoreText.SetText(GoalScore.ToString());
+        _goalScoreText.SetText($"/{GoalScore.ToString()}");
         _timerManager = Timer.GetComponent<TimerManager>();
     }
 
@@ -475,7 +475,7 @@ public class Player : MonoBehaviour
             collision.enabled = false;
 
             _speedXCount++;
-            SpeedX += 0.5f;
+            SpeedX += 2f;
 
             if (_speedText == null)
             {
@@ -494,7 +494,6 @@ public class Player : MonoBehaviour
             }
             collision.enabled = false;
             
-            _startPoint = collision.gameObject.transform.position;
             _cherryCount++;
 
             if (_cherryText == null)

@@ -11375,7 +11375,7 @@ MonoBehaviour:
   RightWall: {fileID: 0}
   Ladder: {fileID: 1827014039}
   Timer: {fileID: 472746514}
-  GoalScore: 10
+  GoalScore: 45
   ClearText: {fileID: 1422283138}
   GoalText: {fileID: 2001346767}
 --- !u!50 &1856723441
