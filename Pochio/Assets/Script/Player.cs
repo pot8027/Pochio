@@ -51,6 +51,17 @@ public class Player : MonoBehaviour
     [Header("はしご重なりチェック")]
     public LadderCheck Ladder;
 
+    [Header("タイマー")]
+    public GameObject Timer;
+
+    [Header("ゴールスコア")]
+    public int GoalScore;
+
+    [Header("クリアテキスト")]
+    public GameObject ClearText;
+
+    public GameObject GoalText;
+
     private bool _isJump = false;
     private bool _isFall = false;
     private float _jumpPos = 0.0f;   
@@ -75,6 +86,9 @@ public class Player : MonoBehaviour
     private TextManager _jumpText = null;
     private TextManager _speedText = null;
     private TextManager _cherryText = null;
+    private TextManager _goalScoreText = null;
+
+    private TimerManager _timerManager = null;
 
     // キー入力
     private float _horizontalKey;
@@ -87,6 +101,9 @@ public class Player : MonoBehaviour
         _anim = GetComponent<Animator>();
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        _goalScoreText = GoalText.GetComponent<TextManager>();
+        _goalScoreText.SetText(GoalScore.ToString());
+        _timerManager = Timer.GetComponent<TimerManager>();
     }
 
     private void Update()
@@ -487,6 +504,13 @@ public class Player : MonoBehaviour
             _cherryText.SetText(_cherryCount.ToString());
 
             Destroy(collision.gameObject);
+
+            // げーむくりあ
+            if (_cherryCount >= GoalScore)
+            {
+                _timerManager.TimerStop();
+                ClearText.SetActive(true);
+            }
         }
 
         else if (collision.tag == Tag.RESTART_ITEM)
