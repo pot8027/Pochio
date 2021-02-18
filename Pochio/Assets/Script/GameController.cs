@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     {
         if (_gameController == null)
         {
-            _gameController = new GameController();
+            _gameController = this;
         }
     }
 

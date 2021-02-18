@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8347002337745463401}
   m_Layer: 0
   m_Name: RestartItem
-  m_TagString: RestartItem
+  m_TagString: Cherry
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

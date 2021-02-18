@@ -1,6 +1,8 @@
 ﻿using Assets.Script;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -68,6 +70,11 @@ public class Player : MonoBehaviour
     private MoveLand _moveLand = null;
     private int _speedXCount = 1;
     private Vector2 _startPoint;
+    private int _cherryCount = 0;
+
+    private TextManager _jumpText = null;
+    private TextManager _speedText = null;
+    private TextManager _cherryText = null;
 
     // キー入力
     private float _horizontalKey;
@@ -87,6 +94,12 @@ public class Player : MonoBehaviour
         _horizontalKey = Input.GetAxis("Horizontal");
         _verticalKey = Input.GetAxis("Vertical");
         _jumpKey = Input.GetAxis("JoyPadCross");
+
+        // シーンリセット
+        if (Input.GetAxis("Reset") != 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     // Update is called once per frame
@@ -426,8 +439,12 @@ public class Player : MonoBehaviour
             collision.enabled = false;
 
             JumpMaxCount++;
-            var jumpCount = GameObject.Find("JumpCount").GetComponent<TextManager>();
-            jumpCount.SetText(JumpMaxCount.ToString());
+
+            if (_jumpText == null)
+            {
+                _jumpText = GameObject.Find("JumpCount").GetComponent<TextManager>();
+            }
+            _jumpText.SetText(JumpMaxCount.ToString());
 
             Destroy(collision.gameObject);
         }
@@ -441,23 +458,40 @@ public class Player : MonoBehaviour
             collision.enabled = false;
 
             _speedXCount++;
-            SpeedX += 2.0f;
-            var jumpCount = GameObject.Find("PlayerSpeed").GetComponent<TextManager>();
-            jumpCount.SetText(_speedXCount.ToString());
+            SpeedX += 0.5f;
+
+            if (_speedText == null)
+            {
+                _speedText = GameObject.Find("PlayerSpeed").GetComponent<TextManager>();
+            }
+            _speedText.SetText(_speedXCount.ToString());
 
             Destroy(collision.gameObject);
         }
 
-        else if (collision.tag == Tag.RESTART_ITEM)
+        else if (collision.tag == Tag.CHERRY_ITEM)
         {
             if (collision.enabled == false)
             {
                 return;
             }
             collision.enabled = false;
+            
             _startPoint = collision.gameObject.transform.position;
+            _cherryCount++;
+
+            if (_cherryText == null)
+            {
+                _cherryText = GameObject.Find("CherryCountCurrent").GetComponent<TextManager>();
+            }
+            _cherryText.SetText(_cherryCount.ToString());
 
             Destroy(collision.gameObject);
+        }
+
+        else if (collision.tag == Tag.RESTART_ITEM)
+        {
+            _startPoint = collision.gameObject.transform.position;
         }
     }
 }

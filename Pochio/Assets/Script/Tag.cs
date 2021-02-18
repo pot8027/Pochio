@@ -9,6 +9,7 @@
         public static readonly string JUMP_ITEM = "JumpItem";
         public static readonly string SPEED_ITEM = "SpeedItem";
 
+        public static readonly string CHERRY_ITEM = "Cherry";
         public static readonly string RESTART_ITEM = "RestartItem";
     }
 }
