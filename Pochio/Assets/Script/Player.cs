@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
     [Header("ジャンプ可能時間")]
     public float JumpLimitTime = 0.0f;
 
+    [Header("壁蹴りX速度可能時間")]
+    public float WallJumpLimitTIme = 0.5f;
+
     [Header("連続ジャンプ可能数")]
     public int JumpMaxCount = 1;
 
@@ -42,11 +45,8 @@ public class Player : MonoBehaviour
     [Header("頭ぶつけチェック")]
     public GroundCheck Head;
 
-    [Header("左壁チェック")]
-    public GroundCheck LeftWall;
-
-    [Header("右壁チェック")]
-    public GroundCheck RightWall;
+    [Header("前方チェック")]
+    public GroundCheck FrontWall;
 
     [Header("はしご重なりチェック")]
     public LadderCheck Ladder;
@@ -81,15 +81,16 @@ public class Player : MonoBehaviour
     private bool _isGround = false;
     private bool _isHead = false;
     private bool _isLadder = false;
-    private bool _isLeftWall = false;
-    private bool _isRightWall = false;
+    private bool _isFrontWall = false;
 
     // ジャンプ状態
     private bool _isJump = false;
+    private bool _isFrontWallJump = false;
     private bool _isReleaseJumpKey = true;
     private bool _canJumpKey = true;
     private float _jumpPos = 0.0f;
     private float _jumpTime = 0.0f;
+    private float _wallJumpTime = 0.0f;
     private int _currentJumpCount = 0;
 
     // 落下状態
@@ -162,6 +163,7 @@ public class Player : MonoBehaviour
     {
         // 接地判定
         _isGround = Ground.IsGround();
+        _isFrontWall = FrontWall.IsGround();
 
         // 天井判定
         _isHead = Head.IsGround();
@@ -182,17 +184,69 @@ public class Player : MonoBehaviour
     private float CalcXSpeed()
     {
         float result = 0.0f;
+        bool isPressJumpKey = _jumpKey > 0;
 
+        // 前方壁蹴り開始
+        if (_isFrontWall)
+        {
+            if (_isFrontWallJump == false)
+            {
+                if (isPressJumpKey)
+                {
+                    if (_isReleaseJumpKey)
+                    {
+                        _wallJumpTime = 0.0f;
+                        _isFrontWallJump = true;
+                    }
+                }
+            }
+        }
+
+        // 壁蹴り中
+        if (_isFrontWallJump)
+        {
+            // 壁蹴りによる反動時間切れ
+            if (_wallJumpTime > WallJumpLimitTIme)
+            {
+                _isFrontWallJump = false;
+            }
+
+            // 壁蹴りジャンプ継続
+            else
+            {
+                _wallJumpTime += Time.deltaTime;
+            }
+        }
+        
+        // 右移動
         if (_horizontalKey > 0)
         {
             _dashTime += Time.deltaTime;
-            result = SpeedX;
+            if (_isFrontWallJump)
+            {
+                result = SpeedX * -0.3f;
+            }
+            else
+            {
+                result = SpeedX;
+            }
         }
+
+        // 左移動
         else if (_horizontalKey < 0)
         {
             _dashTime += Time.deltaTime;
-            result = SpeedX * -1;
+            if (_isFrontWallJump)
+            {
+                result = SpeedX * 0.3f;
+            }
+            else
+            {
+                result = SpeedX * -1;
+            }
         }
+
+        // 入力なし
         else
         {
             result = 0.0f;
@@ -220,7 +274,7 @@ public class Player : MonoBehaviour
         // ジャンプキーを押しているか
         bool isPressJumpKey = _jumpKey > 0;
 
-        if (_isGround)
+        if (_isGround || _isFrontWall)
         {
             _currentJumpCount = 0;
             if (_jumpKey > 0)

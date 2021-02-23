@@ -10,6 +10,20 @@ public class GroundCheck : MonoBehaviour
     private bool _isStay = false;
     private bool _isExit = false;
 
+    private Transform _transform;
+    private Vector3 _defaultScale;
+
+    public void Awake()
+    {
+        _transform = transform;
+        _defaultScale = new Vector3(_transform.localScale.x, _transform.localScale.y, _transform.localScale.z);
+    }
+
+    public void ResetSlace()
+    {
+        transform.localScale = _defaultScale;
+    }
+
     public bool IsGround()
     {
         if (_isEnter || _isStay)
