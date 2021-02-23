@@ -62,38 +62,53 @@ public class Player : MonoBehaviour
 
     public GameObject GoalText;
 
-    private bool _isJump = false;
-    private bool _isFall = false;
-    private float _jumpPos = 0.0f;   
-    private float _dashTime = 0.0f;
-    private float _jumpTime = 0.0f;
-    private float _fallTime = 0.0f;
-    private bool _canJumpKey = true;
-    private bool _isGround = false;
-    private bool _isHead = false;
-    private bool _isLadder = false;
-    private int _currentJumpCount = 0;
-    private bool _releaseJumpKey = true;
-    private float _beforeKey;
+    // プレイヤーコンポーネント
     private Animator _anim = null;
     private Rigidbody2D _rigidBody2D;
     private CapsuleCollider2D _capsuleCollider2D;
+    
+    // 移動床
     private MoveLand _moveLand = null;
-    private int _speedXCount = 1;
+    
+    // 開始位置
     private Vector2 _startPoint;
-    private int _cherryCount = 0;
+    
+    // 速度系
+    private float _beforeHorizonKey;
+    private float _dashTime = 0.0f;
 
-    private TextManager _jumpText = null;
-    private TextManager _speedText = null;
-    private TextManager _cherryText = null;
-    private TextManager _goalScoreText = null;
+    // 衝突状態
+    private bool _isGround = false;
+    private bool _isHead = false;
+    private bool _isLadder = false;
+    private bool _isLeftWall = false;
+    private bool _isRightWall = false;
 
-    private TimerManager _timerManager = null;
+    // ジャンプ状態
+    private bool _isJump = false;
+    private bool _isReleaseJumpKey = true;
+    private bool _canJumpKey = true;
+    private float _jumpPos = 0.0f;
+    private float _jumpTime = 0.0f;
+    private int _currentJumpCount = 0;
+
+    // 落下状態
+    private bool _isFall = false;
+    private float _fallTime = 0.0f;
 
     // キー入力
     private float _horizontalKey;
     private float _verticalKey;
     private float _jumpKey;
+
+    // UI
+    private TextManager _jumpText = null;
+    private TextManager _speedText = null;
+    private TextManager _cherryText = null;
+    private TextManager _goalScoreText = null;
+    private TimerManager _timerManager = null;
+    private int _speedXCount = 1;
+    private int _cherryCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -108,10 +123,13 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        _horizontalKey = Input.GetAxis("Horizontal");
-        _verticalKey = Input.GetAxis("Vertical");
-        _jumpKey = Input.GetAxis("JoyPadCross");
-
+        // キー入力取得
+        {
+            _horizontalKey = Input.GetAxis("Horizontal");
+            _verticalKey = Input.GetAxis("Vertical");
+            _jumpKey = Input.GetAxis("JoyPadCross");
+        }
+        
         // シーンリセット
         if (Input.GetAxis("Reset") != 0)
         {
@@ -122,7 +140,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // 接地状態更新
+        // 衝突状態更新
         UpdateCollisionStatus();
 
         // ダッシュ時間計算
@@ -214,7 +232,7 @@ public class Player : MonoBehaviour
                     _isJump = true;
                     _jumpTime = 0.0f;
                     _currentJumpCount++;
-                    _releaseJumpKey = false;
+                    _isReleaseJumpKey = false;
                 }
             }
             else
@@ -222,14 +240,14 @@ public class Player : MonoBehaviour
                 _isJump = false;
                 _isFall = false;
                 _canJumpKey = true;
-                _releaseJumpKey = true;
+                _isReleaseJumpKey = true;
             }
         }
         else if (_isJump)
         {
             if (isPressJumpKey)
             {
-                if (_releaseJumpKey)
+                if (_isReleaseJumpKey)
                 {
                     if (_currentJumpCount < JumpMaxCount)
                     {
@@ -238,13 +256,13 @@ public class Player : MonoBehaviour
                         _jumpTime = 0.0f;
                         _isJump = true;
                         _currentJumpCount++;
-                        _releaseJumpKey = false;
+                        _isReleaseJumpKey = false;
                     }
                 }
             }
             else
             {
-                _releaseJumpKey = true;
+                _isReleaseJumpKey = true;
             }
 
             _canJumpKey = false;
@@ -274,7 +292,7 @@ public class Player : MonoBehaviour
         {
             if (isPressJumpKey)
             {
-                if (_releaseJumpKey)
+                if (_isReleaseJumpKey)
                 {
                     if (_currentJumpCount < JumpMaxCount)
                     {
@@ -283,13 +301,13 @@ public class Player : MonoBehaviour
                         _jumpTime = 0.0f;
                         _isJump = true;
                         _currentJumpCount++;
-                        _releaseJumpKey = false;
+                        _isReleaseJumpKey = false;
                     }
                 }
             }
             else
             {
-                _releaseJumpKey = true;
+                _isReleaseJumpKey = true;
             }
 
             // はしごに捕まっている間は落下速度0
@@ -345,15 +363,15 @@ public class Player : MonoBehaviour
     private float CalcDashTime(float horizontalKey)
     {
         var result = _dashTime;
-        if (horizontalKey > 0 && _beforeKey < 0)
+        if (horizontalKey > 0 && _beforeHorizonKey < 0)
         {
             result = 0.0f;
         }
-        else if (horizontalKey < 0 && _beforeKey > 0)
+        else if (horizontalKey < 0 && _beforeHorizonKey > 0)
         {
             result = 0.0f;
         }
-        _beforeKey = horizontalKey;
+        _beforeHorizonKey = horizontalKey;
 
         return result;
     }
