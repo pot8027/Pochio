@@ -15,8 +15,9 @@ namespace Assets.Script.Player
         private int _currentJumpCount = 0;
 
         /// <summary>
-        ///  壁ジャンプ制御
+        ///  壁蹴り制御
         /// </summary>
+        private bool _canWallJump = false;      // 壁蹴り可能フラグ
         private bool _isFrontWallJump = false;
         private float _wallJumpTime = 0.0f;
 
@@ -79,14 +80,18 @@ namespace Assets.Script.Player
             // 前方壁蹴り開始
             if (_isFrontWall)
             {
-                if (_isFrontWallJump == false)
+                // 壁蹴り可
+                if (_canWallJump)
                 {
-                    if (isPressJumpKey)
+                    if (_isFrontWallJump == false)
                     {
-                        if (_isReleaseJumpKey)
+                        if (isPressJumpKey)
                         {
-                            _wallJumpTime = 0.0f;
-                            _isFrontWallJump = true;
+                            if (_isReleaseJumpKey)
+                            {
+                                _wallJumpTime = 0.0f;
+                                _isFrontWallJump = true;
+                            }
                         }
                     }
                 }
@@ -168,7 +173,23 @@ namespace Assets.Script.Player
             var wasPressedThisFrame = _southInputAction.WasPressedThisFrame();
 
             // 接地中
-            if (_isGround || _isFrontWall)
+            var isTouchGround = false;
+            {
+                // 壁蹴りあり
+                if (_canWallJump)
+                {
+                    isTouchGround = _isGround || _isFrontWall;
+                }
+
+                // 壁蹴りなし
+                else
+                {
+                    isTouchGround = _isGround;
+                }
+            }
+            
+            // 接地中
+            if (isTouchGround)
             {
                 _currentJumpCount = 0;
                 _isFall = false;
