@@ -56,5 +56,15 @@ namespace Assets.Script.Player
                 UpdateAnimation();
             }
         }
+
+        private void OnGUI()
+        {
+            //GUILayout.Label($"wasPressedThisFrame:{_southInputAction.WasPressedThisFrame()}");
+            //GUILayout.Label($"isPressed:{_southInputAction.IsPressed()}");
+            //GUILayout.Label($"_isGround:{_isGround}");
+            //GUILayout.Label($"_isJump:{_isJump}");
+            //GUILayout.Label($"_isFall:{_isFall}");
+            //GUILayout.Label($"_canJumpKey:{_canJumpKey}");
+        }
     }
 }

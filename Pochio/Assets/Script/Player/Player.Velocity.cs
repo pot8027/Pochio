@@ -161,17 +161,18 @@ namespace Assets.Script.Player
         /// <returns>Y方向速度</returns>
         private float CalcSpeedY()
         {
-            float result = -Gravity;
+            float result = -1 * Gravity;
 
-            // ジャンプキーを押しているか
-            bool isPressJumpKey = _southInputAction.IsPressed();
+            var inputY = GetInputY();
+            var isPressed = _southInputAction.IsPressed();
 
-            var verticalKey = GetInputY();
-
+            // 接地中
             if (_isGround || _isFrontWall)
             {
                 _currentJumpCount = 0;
-                if (isPressJumpKey)
+
+                // ジャンプ開始
+                if (isPressed)
                 {
                     if (_canJumpKey)
                     {
@@ -183,6 +184,8 @@ namespace Assets.Script.Player
                         _isReleaseJumpKey = false;
                     }
                 }
+
+                // 接地中
                 else
                 {
                     _isJump = false;
@@ -191,12 +194,16 @@ namespace Assets.Script.Player
                     _isReleaseJumpKey = true;
                 }
             }
+
+            // ジャンプ中
             else if (_isJump)
             {
-                if (isPressJumpKey)
+                // ジャンプキー押下開始
+                if (isPressed)
                 {
                     if (_isReleaseJumpKey)
                     {
+                        // 空中ジャンプ開始
                         if (_currentJumpCount < JumpMaxCount)
                         {
                             result = JumpSpeed;
@@ -208,6 +215,7 @@ namespace Assets.Script.Player
                         }
                     }
                 }
+
                 else
                 {
                     _isReleaseJumpKey = true;
@@ -216,13 +224,12 @@ namespace Assets.Script.Player
                 _canJumpKey = false;
 
                 //現在の高さが飛べる高さより下か
-
                 bool canHeight = _jumpPos + JumpHeight > transform.position.y;
 
                 //ジャンプ時間が長くなりすぎてないか
                 bool canTime = JumpLimitTime > _jumpTime;
 
-                if (isPressJumpKey && canHeight && canTime && _isHead == false)
+                if (isPressed && canHeight && canTime && _isHead == false)
                 {
                     result = JumpSpeed;
                     _jumpTime += Time.deltaTime;
@@ -236,9 +243,11 @@ namespace Assets.Script.Player
                     _jumpTime = 0.0f;
                 }
             }
+
+            // 落下中
             else if (_isFall)
             {
-                if (isPressJumpKey)
+                if (isPressed)
                 {
                     if (_isReleaseJumpKey)
                     {
@@ -274,24 +283,26 @@ namespace Assets.Script.Player
                 _fallTime = 0.0f;
             }
 
-            if (_isJump)
+            // 速度調整
             {
-                result *= JumpCurve.Evaluate(_jumpTime);
+                if (_isJump)
+                {
+                    result *= JumpCurve.Evaluate(_jumpTime);
+                }
+                else if (_isFall)
+                {
+                    result *= FallCurve.Evaluate(_fallTime);
+                }
             }
-
-            else if (_isFall)
-            {
-                result *= FallCurve.Evaluate(_fallTime);
-            }
-
+            
             // はしご中は速度一定
             if (_isLadder)
             {
-                if (verticalKey > 0)
+                if (inputY > 0)
                 {
                     result = LadderSpeed;
                 }
-                else if (verticalKey < 0)
+                else if (inputY < 0)
                 {
                     result = -LadderSpeed;
                 }
