@@ -157,6 +157,12 @@ namespace Assets.Script.Player
                 result += _moveLand.GetVelocity().x;
             }
 
+            // はしご中にアナログスティックだと横に動きすぎるので調整
+            if (_isLadder)
+            {
+                result *= 0.2f;
+            }
+
             return result;
         }
 
