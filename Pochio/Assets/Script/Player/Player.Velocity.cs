@@ -158,7 +158,7 @@ namespace Assets.Script.Player
             }
 
             // はしご中にアナログスティックだと横に動きすぎるので調整
-            if (_isLadder)
+            if (_isLadder && GetInputY() >= 0.5)
             {
                 result *= 0.2f;
             }

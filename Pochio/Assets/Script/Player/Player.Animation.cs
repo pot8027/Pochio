@@ -39,7 +39,7 @@ namespace Assets.Script.Player
             else if (_isGround)
             {
                 // 地面にいて横入力がない場合は待ち
-                if (verticalKey == 0)
+                if (GetInputX() == 0)
                 {
                     _anim.Play("player_stand");
                 }
