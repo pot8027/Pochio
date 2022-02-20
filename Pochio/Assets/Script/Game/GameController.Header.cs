@@ -19,5 +19,14 @@ namespace Assets.Script.Game
 
         [Header("Textmmm")]
         public Text Textmmm;
+
+        [Header("TextJumpLevel")]
+        public Text TexJumpLevel;
+
+        [Header("TextSpeedLevel")]
+        public Text TexSpeedLevel;
+
+        [Header("ImageWallJump")]
+        public Image ImageWallJump;
     }
 }

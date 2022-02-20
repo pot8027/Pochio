@@ -17,7 +17,6 @@ namespace Assets.Script.Player
         /// <summary>
         ///  壁蹴り制御
         /// </summary>
-        private bool _canWallJump = false;      // 壁蹴り可能フラグ
         private bool _isFrontWallJump = false;
         private float _wallJumpTime = 0.0f;
 
@@ -81,7 +80,7 @@ namespace Assets.Script.Player
             if (_isFrontWall)
             {
                 // 壁蹴り可
-                if (_canWallJump)
+                if (CanWallJump)
                 {
                     if (_isFrontWallJump == false)
                     {
@@ -176,13 +175,12 @@ namespace Assets.Script.Player
 
             var inputY = GetInputY();
             var isPressed = _southInputAction.IsPressed();
-            var wasPressedThisFrame = _southInputAction.WasPressedThisFrame();
 
             // 接地中
-            var isTouchGround = false;
+            bool isTouchGround;
             {
                 // 壁蹴りあり
-                if (_canWallJump)
+                if (CanWallJump)
                 {
                     isTouchGround = _isGround || _isFrontWall;
                 }
@@ -233,7 +231,7 @@ namespace Assets.Script.Player
                     if (_isReleaseJumpKey)
                     {
                         // 空中ジャンプ開始
-                        if (_currentJumpCount < JumpMaxCount)
+                        if (_currentJumpCount < JumpLevel)
                         {
                             result = JumpSpeed;
                             _jumpPos = transform.position.y;
@@ -280,7 +278,7 @@ namespace Assets.Script.Player
                 {
                     if (_isReleaseJumpKey)
                     {
-                        if (_currentJumpCount < JumpMaxCount)
+                        if (_currentJumpCount < JumpLevel)
                         {
                             result = JumpSpeed;
                             _jumpPos = transform.position.y;

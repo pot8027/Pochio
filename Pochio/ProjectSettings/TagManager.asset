@@ -15,6 +15,7 @@ TagManager:
   - SpeedItem
   - RestartItem
   - Cherry
+  - WallJumpItem
   layers:
   - Default
   - TransparentFX

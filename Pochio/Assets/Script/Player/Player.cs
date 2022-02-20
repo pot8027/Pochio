@@ -55,6 +55,11 @@ namespace Assets.Script.Player
             {
                 UpdateAnimation();
             }
+
+            // UI更新
+            {
+                UpdatePlayerStatusUI();
+            }
         }
 
         private void OnGUI()
@@ -65,8 +70,8 @@ namespace Assets.Script.Player
             //GUILayout.Label($"_isJump:{_isJump}");
             //GUILayout.Label($"_isFall:{_isFall}");
             //GUILayout.Label($"_canJumpKey:{_canJumpKey}");
-            GUILayout.Label($"SpeedX:{GetInputX()}");
-            GUILayout.Label($"SpeedY:{GetInputY()}");
+            //GUILayout.Label($"SpeedX:{GetInputX()}");
+            //GUILayout.Label($"SpeedY:{GetInputY()}");
         }
     }
 }

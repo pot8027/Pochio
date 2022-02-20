@@ -4,6 +4,15 @@ namespace Assets.Script.Player
 {
     public partial class Player
     {
+        [Header("速度レベル")]
+        public int SpeedLevel = 1;
+
+        [Header("連続ジャンプ可能数")]
+        public int JumpLevel = 1;
+
+        [Header("壁蹴りスキル")]
+        public bool CanWallJump = false;
+
         [Header("移動速度")]
         public float SpeedX = 1.0f;
 
@@ -24,9 +33,6 @@ namespace Assets.Script.Player
 
         [Header("壁蹴りX速度可能時間")]
         public float WallJumpLimitTIme = 0.5f;
-
-        [Header("連続ジャンプ可能数")]
-        public int JumpMaxCount = 1;
 
         [Header("ダッシュ速度カーブ")]
         public AnimationCurve DashCurve;
