@@ -165,11 +165,13 @@ namespace Assets.Script.Player
 
             var inputY = GetInputY();
             var isPressed = _southInputAction.IsPressed();
+            var wasPressedThisFrame = _southInputAction.WasPressedThisFrame();
 
             // 接地中
             if (_isGround || _isFrontWall)
             {
                 _currentJumpCount = 0;
+                _isFall = false;
 
                 // ジャンプ開始
                 if (isPressed)
