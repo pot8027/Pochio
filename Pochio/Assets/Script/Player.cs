@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class Player : MonoBehaviour
 {
@@ -98,9 +100,43 @@ public class Player : MonoBehaviour
     private float _fallTime = 0.0f;
 
     // キー入力
-    private float _horizontalKey;
-    private float _verticalKey;
-    private float _jumpKey;
+
+    // 左アナログスティック
+    private InputAction _leftStickInputAction = default(InputAction);
+
+    // 右アナログスティック
+    private InputAction _rightStickInputAction = default(InputAction);
+
+    // 上アクションボタン押下
+    private InputAction _northInputAction = default(InputAction);
+
+    // 下アクションボタン押下
+    private InputAction _southInputAction = default(InputAction);
+
+    // 左アクションボタン押下
+    private InputAction _westInputAction = default(InputAction);
+
+    // 右アクションボタン押下
+    private InputAction _eastInputAction = default(InputAction);
+
+    // 左手前トリガー押下
+    private InputAction _leftShouterInputAction = default(InputAction);
+
+    // 左奥トリガー押下
+    private InputAction _leftTriggerInputAction = default(InputAction);
+
+    // 右手前トリガー押下
+    private InputAction _rightShouterInputAction = default(InputAction);
+
+    // 右奥トリガー押下
+    private InputAction _rightTriggerInputAction = default(InputAction);
+
+    // Optionボタン押下
+    private InputAction _optionInputAction = default(InputAction);
+
+    // Shareボタン押下
+    private InputAction _shareInputAction = default(InputAction);
+
 
     // UI
     private TextManager _jumpText = null;
@@ -120,19 +156,38 @@ public class Player : MonoBehaviour
         _goalScoreText = GoalText.GetComponent<TextManager>();
         _goalScoreText.SetText($"/{GoalScore.ToString()}");
         _timerManager = Timer.GetComponent<TimerManager>();
+
+        InitializeInputAction();
+    }
+
+    /// <summary>
+    /// InputSystem初期化
+    /// </summary>
+    private void InitializeInputAction()
+    {
+        var playerInput = GetComponent<PlayerInput>();
+
+        playerInput.SwitchCurrentActionMap("Player");
+        var actionMap = playerInput.currentActionMap;
+
+        _leftStickInputAction = actionMap["LeftStick"];
+        _rightStickInputAction = actionMap["RightStick"];
+        _southInputAction = actionMap["SouthButton"];
+        _eastInputAction = actionMap["EastButton"];
+        _northInputAction = actionMap["NorthButton"];
+        _westInputAction = actionMap["WestButton"];
+        _leftShouterInputAction = actionMap["LeftShouter"];
+        _leftTriggerInputAction = actionMap["LeftTrigger"];
+        _rightShouterInputAction = actionMap["RightShouter"];
+        _rightTriggerInputAction = actionMap["RightTrigger"];
+        _optionInputAction = actionMap["Options"];
+        _shareInputAction = actionMap["Share"];
     }
 
     private void Update()
     {
-        // キー入力取得
-        {
-            _horizontalKey = Input.GetAxis("Horizontal");
-            _verticalKey = Input.GetAxis("Vertical");
-            _jumpKey = Input.GetAxis("JoyPadCross");
-        }
-        
         // シーンリセット
-        if (Input.GetAxis("Reset") != 0)
+        if (_shareInputAction.WasPressedThisFrame())
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
@@ -145,7 +200,8 @@ public class Player : MonoBehaviour
         UpdateCollisionStatus();
 
         // ダッシュ時間計算
-        _dashTime = CalcDashTime(_horizontalKey);
+        var xInput = _leftStickInputAction.ReadValue<Vector2>().x;
+        _dashTime = CalcDashTime(xInput);
 
         // 速度計算
         float localSpeedX = CalcXSpeed();
@@ -184,7 +240,8 @@ public class Player : MonoBehaviour
     private float CalcXSpeed()
     {
         float result = 0.0f;
-        bool isPressJumpKey = _jumpKey > 0;
+        bool isPressJumpKey = _southInputAction.IsPressed();
+        var xInput = GetInputX();
 
         // 前方壁蹴り開始
         if (_isFrontWall)
@@ -219,7 +276,7 @@ public class Player : MonoBehaviour
         }
         
         // 右移動
-        if (_horizontalKey > 0)
+        if (xInput > 0)
         {
             _dashTime += Time.deltaTime;
             if (_isFrontWallJump)
@@ -233,7 +290,7 @@ public class Player : MonoBehaviour
         }
 
         // 左移動
-        else if (_horizontalKey < 0)
+        else if (xInput < 0)
         {
             _dashTime += Time.deltaTime;
             if (_isFrontWallJump)
@@ -272,12 +329,14 @@ public class Player : MonoBehaviour
         float result = -Gravity;
 
         // ジャンプキーを押しているか
-        bool isPressJumpKey = _jumpKey > 0;
+        bool isPressJumpKey = _southInputAction.IsPressed();
+
+        var verticalKey = GetInputY();
 
         if (_isGround || _isFrontWall)
         {
             _currentJumpCount = 0;
-            if (_jumpKey > 0)
+            if (isPressJumpKey)
             {
                 if (_canJumpKey)
                 {
@@ -393,11 +452,11 @@ public class Player : MonoBehaviour
         // はしご中は速度一定
         if (_isLadder)
         {
-            if (_verticalKey > 0)
+            if (verticalKey > 0)
             {
                 result = LadderSpeed;
             }
-            else if (_verticalKey < 0)
+            else if (verticalKey < 0)
             {
                 result = -LadderSpeed;
             }
@@ -439,6 +498,9 @@ public class Player : MonoBehaviour
         var absLocalScaleX = Math.Abs(transform.localScale.x);
         var absLocalScaleY = Math.Abs(transform.localScale.y);
 
+        var horizonKey = GetInputX();
+        var verticalKey = GetInputY();
+
         // ジャンプ中はジャンプモーション
         if (_isJump)
         {
@@ -446,7 +508,7 @@ public class Player : MonoBehaviour
         }
         else if (_isLadder)
         {
-            if (_verticalKey != 0)
+            if (verticalKey != 0)
             {
                 _anim.Play("player_clumb");
             }
@@ -462,7 +524,7 @@ public class Player : MonoBehaviour
         else if (_isGround)
         {
             // 地面にいて横入力がない場合は待ち
-            if (_horizontalKey == 0)
+            if (verticalKey == 0)
             {
                 _anim.Play("player_stand");
             }
@@ -477,11 +539,11 @@ public class Player : MonoBehaviour
         }
 
         // 向き更新
-        if (_horizontalKey > 0)
+        if (horizonKey > 0)
         {
             transform.localScale = new Vector2(absLocalScaleX, absLocalScaleY);
         }
-        else if (_horizontalKey < 0)
+        else if (horizonKey < 0)
         {
             transform.localScale = new Vector2(-absLocalScaleX, absLocalScaleY);
         }
@@ -588,5 +650,15 @@ public class Player : MonoBehaviour
         {
             _startPoint = collision.gameObject.transform.position;
         }
+    }
+
+    private float GetInputX()
+    {
+        return _leftStickInputAction.ReadValue<Vector2>().x;
+    }
+
+    private float GetInputY()
+    {
+        return _leftStickInputAction.ReadValue<Vector2>().y;
     }
 }
