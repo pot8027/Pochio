@@ -18,7 +18,7 @@ namespace Assets.Script.Player
             if (collision.tag == Tag.JUMP_ITEM)
             {
                 collision.enabled = false;
-                JumpMaxCount++;
+                JumpLevel++;
                 Destroy(collision.gameObject);
             }
 
@@ -26,7 +26,16 @@ namespace Assets.Script.Player
             else if (collision.tag == Tag.SPEED_ITEM)
             {
                 collision.enabled = false;
+                SpeedLevel++;
                 SpeedX += 2f;
+                Destroy(collision.gameObject);
+            }
+
+            // 壁蹴りスキルアイテム
+            else if (collision.tag == Tag.WALL_JUMP_ITEM)
+            {
+                collision.enabled = false;
+                CanWallJump = true;
                 Destroy(collision.gameObject);
             }
 
