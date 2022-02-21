@@ -55,6 +55,12 @@ namespace Assets.Script.Player
         [Header("はしご重なりチェック")]
         public LadderCheck Ladder;
 
+        [Header("アイテム効果音")]
+        public AudioSource ItemAudioSrc;
+
+        [Header("プレイヤー効果音")]
+        public AudioSource PlayerAudioSrc;
+
         [Header("クリアテキスト")]
         public GameObject ClearText;
     }

@@ -14,6 +14,8 @@ namespace Assets.Script.Player
                 return;
             }
 
+            var colliderController = collision.gameObject.GetComponent<ColliderController>();
+
             // ジャンプ回数アイテム
             if (collision.tag == Tag.JUMP_ITEM)
             {
@@ -42,6 +44,16 @@ namespace Assets.Script.Player
             // スコアアイテム
             else if (collision.tag == Tag.CHERRY_ITEM)
             {
+                // アイテム取得音再生
+                if (colliderController != null)
+                {
+                    var audioClip = colliderController.AudioClip;
+                    if (audioClip != null)
+                    {
+                        ItemAudioSrc.PlayOneShot(audioClip);
+                    }
+                }
+
                 collision.enabled = false;
                 GameController.GetInstance.AddScore();
                 Destroy(collision.gameObject);

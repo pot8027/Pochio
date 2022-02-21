@@ -6,6 +6,8 @@
         public static readonly string MOVE_GROUND = "MoveGround";
         public static readonly string DEAD = "Dead";
 
+        public static readonly string PLAYER = "Player";
+
         public static readonly string JUMP_ITEM = "JumpItem";
         public static readonly string SPEED_ITEM = "SpeedItem";
         public static readonly string WALL_JUMP_ITEM = "WallJumpItem";
