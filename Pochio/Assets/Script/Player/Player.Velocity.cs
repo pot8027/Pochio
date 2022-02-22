@@ -10,6 +10,7 @@ namespace Assets.Script.Player
         private bool _isJump = false;
         private bool _canJumpKey = true;
         private bool _isReleaseJumpKey = true;
+        private bool _canPlayJumpAudio = true;
         private float _jumpPos = 0.0f;
         private float _jumpTime = 0.0f;
         private int _currentJumpCount = 0;
@@ -208,6 +209,7 @@ namespace Assets.Script.Player
                         _isJump = true;
                         _jumpTime = 0.0f;
                         _currentJumpCount++;
+                        _canPlayJumpAudio = true;
                         _isReleaseJumpKey = false;
                     }
                 }
@@ -238,6 +240,7 @@ namespace Assets.Script.Player
                             _jumpTime = 0.0f;
                             _isJump = true;
                             _currentJumpCount++;
+                            _canPlayJumpAudio = true;
                             _isReleaseJumpKey = false;
                         }
                     }
@@ -285,6 +288,7 @@ namespace Assets.Script.Player
                             _jumpTime = 0.0f;
                             _isJump = true;
                             _currentJumpCount++;
+                            _canPlayJumpAudio = true;
                             _isReleaseJumpKey = false;
                         }
                     }

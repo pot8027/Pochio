@@ -14,9 +14,18 @@ namespace Assets.Script.Player
                 return;
             }
 
+            var colliderController = collision.gameObject.GetComponent<ColliderController>();
+            AudioClip itemAudioClip = null;
+
             // ジャンプ回数アイテム
             if (collision.tag == Tag.JUMP_ITEM)
             {
+                // アイテム取得音再生
+                if (colliderController != null)
+                {
+                    itemAudioClip = colliderController.AudioClip;
+                }
+
                 collision.enabled = false;
                 JumpLevel++;
                 Destroy(collision.gameObject);
@@ -25,6 +34,12 @@ namespace Assets.Script.Player
             // スピードアップアイテム
             else if (collision.tag == Tag.SPEED_ITEM)
             {
+                // アイテム取得音再生
+                if (colliderController != null)
+                {
+                    itemAudioClip = colliderController.AudioClip;
+                }
+
                 collision.enabled = false;
                 SpeedLevel++;
                 SpeedX += 2f;
@@ -34,6 +49,12 @@ namespace Assets.Script.Player
             // 壁蹴りスキルアイテム
             else if (collision.tag == Tag.WALL_JUMP_ITEM)
             {
+                // アイテム取得音再生
+                if (colliderController != null)
+                {
+                    itemAudioClip = colliderController.AudioClip;
+                }
+
                 collision.enabled = false;
                 CanWallJump = true;
                 Destroy(collision.gameObject);
@@ -42,6 +63,12 @@ namespace Assets.Script.Player
             // スコアアイテム
             else if (collision.tag == Tag.CHERRY_ITEM)
             {
+                // アイテム取得音再生
+                if (colliderController != null)
+                {
+                    itemAudioClip = colliderController.AudioClip;
+                }
+
                 collision.enabled = false;
                 GameController.GetInstance.AddScore();
                 Destroy(collision.gameObject);
@@ -58,6 +85,12 @@ namespace Assets.Script.Player
             else if (collision.tag == Tag.RESTART_ITEM)
             {
                 _startPoint = collision.gameObject.transform.position;
+            }
+
+            // アイテムオーディオ再生
+            if (itemAudioClip != null)
+            {
+                PlayItemSound(itemAudioClip);
             }
         }
     }
