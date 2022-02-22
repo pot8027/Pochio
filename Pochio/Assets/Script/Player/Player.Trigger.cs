@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 
 using Assets.Script.Game;
+using Assets.Script.Collider;
 
 namespace Assets.Script.Player
 {

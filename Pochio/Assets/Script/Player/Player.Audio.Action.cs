@@ -14,6 +14,11 @@ namespace Assets.Script.Player
                 return;
             }
 
+            if (JumpAudioSouce.isPlaying && JumpAudioSouce.time <= 0.2f)
+            {
+                return;
+            }
+
             JumpAudioSouce.Play();
         }
 
