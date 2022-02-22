@@ -50,7 +50,7 @@ namespace Assets.Script.Player
                     var audioClip = colliderController.AudioClip;
                     if (audioClip != null)
                     {
-                        ItemAudioSrc.PlayOneShot(audioClip);
+                        PlayItemSound(audioClip);
                     }
                 }
 

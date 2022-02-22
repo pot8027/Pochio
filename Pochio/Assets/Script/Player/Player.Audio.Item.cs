@@ -15,21 +15,7 @@ namespace Assets.Script.Player
                 return;
             }
 
-            ItemAudioSrc.PlayOneShot(audioClip);
-        }
-
-        /// <summary>
-        /// プレイヤー効果音を再生する
-        /// </summary>
-        /// <param name="audioClip"></param>
-        private void PlayPlayerSound(AudioClip audioClip)
-        {
-            if (audioClip == null)
-            {
-                return;
-            }
-
-            PlayerAudioSrc.PlayOneShot(audioClip);
+            ItemAudioSource.PlayOneShot(audioClip);
         }
     }
 }

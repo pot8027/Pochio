@@ -19,38 +19,38 @@ namespace Assets.Script.Player
             // ジャンプ中はジャンプモーション
             if (_isJump)
             {
-                _anim.Play("player_jump");
+                PlayAnimJump();
             }
             else if (_isLadder)
             {
                 if (verticalKey != 0)
                 {
-                    _anim.Play("player_clumb");
+                    PlayAnimClimb();
                 }
                 else
                 {
-                    _anim.Play("player_clumb_stop");
+                    PlayAnimClimbStop();
                 }
             }
             else if (_isFall)
             {
-                _anim.Play("player_fall");
+                PlayAnimFall();
             }
             else if (_isGround)
             {
                 // 地面にいて横入力がない場合は待ち
                 if (GetInputX() == 0)
                 {
-                    _anim.Play("player_stand");
+                    PlayAnimStand();
                 }
                 else
                 {
-                    _anim.Play("player_run");
+                    PlayAnimRun();
                 }
             }
             else
             {
-                _anim.Play("player_fall");
+                PlayAnimFall(); ;
             }
 
             // 向き更新
@@ -62,6 +62,50 @@ namespace Assets.Script.Player
             {
                 transform.localScale = new Vector2(-absLocalScaleX, absLocalScaleY);
             }
+        }
+
+        private void PlayAnimJump()
+        {
+            // TODO:
+            // ジャンプキー押下時のみ音を鳴らす
+            if (_canPlayJumpAudio == true)
+            {
+                PlayPlayerJumpAudio();
+                _canPlayJumpAudio = false;
+            }
+
+            StopPlayerRunAudio();
+            _anim.Play("player_jump");
+        }
+
+        private void PlayAnimClimb()
+        {
+            StopPlayerRunAudio();
+            _anim.Play("player_clumb");
+        }
+
+        private void PlayAnimClimbStop()
+        {
+            StopPlayerRunAudio();
+            _anim.Play("player_clumb_stop"); ;
+        }
+
+        private void PlayAnimFall()
+        {
+            StopPlayerRunAudio();
+            _anim.Play("player_fall");
+        }
+
+        private void PlayAnimStand()
+        {
+            StopPlayerRunAudio();
+            _anim.Play("player_stand");
+        }
+
+        private void PlayAnimRun()
+        {
+            PlayPlayerRunAudio();
+            _anim.Play("player_run");
         }
     }
 }
