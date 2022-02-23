@@ -24,7 +24,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - StageObject
   - 
   - 
   - 
@@ -56,6 +56,9 @@ TagManager:
     locked: 0
   - name: BackGroundObject
     uniqueID: 2291867437
+    locked: 0
+  - name: StageObject
+    uniqueID: 1116671775
     locked: 0
   - name: Default
     uniqueID: 0

@@ -36,7 +36,8 @@ namespace Assets.Script.Collider
 
                 if (Target != null)
                 {
-                    Target.SetActive(true);
+                    // 活性化反転
+                    Target.SetActive(!Target.activeSelf);
                 }
 
                 _spriteRend.enabled = false;
