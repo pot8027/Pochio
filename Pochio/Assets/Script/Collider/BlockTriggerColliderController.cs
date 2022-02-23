@@ -7,32 +7,32 @@ namespace Assets.Script.Collider
         [Header("管理対象")]
         public GameObject Target;
 
-        private AudioSource _audioSource;
+        private AudioSource _triggerAudioSource;
         private SpriteRenderer _spriteRend;
-        private Collider2D _collider;
+        private Collider2D _triggerCollider;
 
         private void Start()
         {
-            _audioSource = GetComponent<AudioSource>();
+            _triggerAudioSource = GetComponent<AudioSource>();
             _spriteRend = GetComponent<SpriteRenderer>();
-            _collider = GetComponent<Collider2D>();
+            _triggerCollider = GetComponent<Collider2D>();
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (_collider.enabled == false)
+            if (_triggerCollider.enabled == false)
             {
                 return;
             }
 
             if (collision.tag == Tag.PLAYER)
             {
-                if (_audioSource == null)
+                if (_triggerAudioSource == null)
                 {
                     return;
                 }
 
-                _audioSource.Play();
+                _triggerAudioSource.Play();
 
                 if (Target != null)
                 {
@@ -40,7 +40,7 @@ namespace Assets.Script.Collider
                 }
 
                 _spriteRend.enabled = false;
-                _collider.enabled = false;
+                _triggerCollider.enabled = false;
             }
         }
     }

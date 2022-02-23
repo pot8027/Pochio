@@ -11,7 +11,7 @@ namespace Assets.Script.Collider
 
         private Collider2D _collider;
         private Renderer _renderer;
-        private AudioSource _audioSource;
+        //private AudioSource _audioSource;
 
         private void Awake()
         {
