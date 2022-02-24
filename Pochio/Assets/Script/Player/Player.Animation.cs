@@ -36,7 +36,7 @@ namespace Assets.Script.Player
             {
                 PlayAnimFall();
             }
-            else if (_isGround)
+            else if (_isTouchingGround)
             {
                 // 地面にいて横入力がない場合は待ち
                 if (GetInputX() == 0)
@@ -66,7 +66,6 @@ namespace Assets.Script.Player
 
         private void PlayAnimJump()
         {
-            // TODO:
             // ジャンプキー押下時のみ音を鳴らす
             if (_canPlayJumpAudio == true)
             {

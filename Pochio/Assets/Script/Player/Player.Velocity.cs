@@ -78,7 +78,7 @@ namespace Assets.Script.Player
             var xInput = GetInputX();
 
             // 前方壁蹴り開始
-            if (_isFrontWall)
+            if (_isTouchingFrontWall)
             {
                 // 壁蹴り可
                 if (CanWallJump)
@@ -183,13 +183,13 @@ namespace Assets.Script.Player
                 // 壁蹴りあり
                 if (CanWallJump)
                 {
-                    isTouchGround = _isGround || _isFrontWall;
+                    isTouchGround = _isTouchingGround || _isTouchingFrontWall;
                 }
 
                 // 壁蹴りなし
                 else
                 {
-                    isTouchGround = _isGround;
+                    isTouchGround = _isTouchingGround;
                 }
             }
             

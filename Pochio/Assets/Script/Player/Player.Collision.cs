@@ -7,19 +7,28 @@ namespace Assets.Script.Player
         /// <summary>
         /// 正面壁衝突判定
         /// </summary>
-        private bool _isFrontWall = false;
+        private bool _isTouchingFrontWall = false;
         private void UpdateFrontWallStatus()
         {
-            _isFrontWall = FrontWall.IsGround();
+            _isTouchingFrontWall = FrontWall.IsGround();
         }
 
         /// <summary>
         /// 地面衝突判定
         /// </summary>
-        private bool _isGround = false;
+        private bool _isTouchingGround = false;
         private void UpdateGroundStatus()
         {
-            _isGround = Ground.IsGround();
+            _isTouchingGround = Ground.IsGround();
+        }
+
+        /// <summary>
+        /// 鍵壁衝突判定
+        /// </summary>
+        private bool _isTouchingKeyWall = false;
+        private void UpdateKeyWallStatus()
+        {
+            _isTouchingKeyWall = KeyWall.IsGround();
         }
 
         /// <summary>
@@ -29,7 +38,7 @@ namespace Assets.Script.Player
         private void UpdateHeadStatus()
         {
             _isHead = Head.IsGround();
-            if (_isGround && _isHead)
+            if (_isTouchingGround && _isHead)
             {
                 Head.Reset();
                 _isHead = Head.IsGround();

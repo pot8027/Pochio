@@ -6,6 +6,7 @@
         /// 現在のスコア
         /// </summary>
         private int _currentScore = 0;
+        public int Score { get { return _currentScore; } }
 
         /// <summary>
         /// スコアを加算
@@ -14,6 +15,15 @@
         public void AddScore(int add = 1)
         {
             _currentScore += add;
+        }
+
+        /// <summary>
+        /// スコアを減算
+        /// </summary>
+        /// <param name="remove">減算値</param>
+        public void RemoveScore(int remove = 1)
+        {
+            _currentScore -= remove;
         }
 
         /// <summary>

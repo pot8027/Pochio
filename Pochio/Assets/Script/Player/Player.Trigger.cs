@@ -74,12 +74,12 @@ namespace Assets.Script.Player
                 GameController.GetInstance.AddScore();
                 Destroy(collision.gameObject);
 
-                // げーむくりあ
-                if (GameController.GetInstance.IsClear())
-                {
-                    GameController.GetInstance.TimerStop();
-                    ClearText.GetComponent<Text>().enabled = true;
-                }
+                //// げーむくりあ
+                //if (GameController.GetInstance.IsClear())
+                //{
+                //    GameController.GetInstance.TimerStop();
+                //    ClearText.GetComponent<Text>().enabled = true;
+                //}
             }
 
             // 再スタートアイテム
