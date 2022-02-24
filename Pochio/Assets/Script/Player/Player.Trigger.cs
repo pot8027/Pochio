@@ -43,7 +43,7 @@ namespace Assets.Script.Player
 
                 collision.enabled = false;
                 SpeedLevel++;
-                SpeedX += 2f;
+                SpeedX += 1.0f;
                 Destroy(collision.gameObject);
             }
 
