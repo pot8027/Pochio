@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Script
 {
@@ -9,5 +10,13 @@ namespace Assets.Script
 
         [Header("開場時音")]
         public AudioClip OpenAudioClip;
+
+        [Header("表示テキスト")]
+        public Text DisplayText;
+
+        private void Start()
+        {
+            DisplayText.text = $"{KeyNumber}";
+        }
     }
 }
