@@ -18,6 +18,7 @@ TagManager:
   - WallJumpItem
   - WarpItem
   - Death
+  - Goal
   layers:
   - Default
   - TransparentFX

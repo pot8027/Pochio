@@ -14,5 +14,8 @@
 
         public static readonly string CHERRY_ITEM = "Cherry";
         public static readonly string RESTART_ITEM = "RestartItem";
+
+        public static readonly string GOAL = "Goal";
+
     }
 }

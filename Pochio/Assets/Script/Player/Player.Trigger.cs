@@ -82,6 +82,13 @@ namespace Assets.Script.Player
                 //}
             }
 
+            // ゴール
+            else if (collision.tag == Tag.GOAL)
+            {
+                GameController.GetInstance.TimerStop();
+                ClearText.GetComponent<Text>().enabled = true;
+            }
+
             // 再スタートアイテム
             else if (collision.tag == Tag.RESTART_ITEM)
             {
