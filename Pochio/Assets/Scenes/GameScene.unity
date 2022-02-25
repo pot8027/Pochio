@@ -61736,7 +61736,7 @@ MonoBehaviour:
   Gravity: 6
   JumpSpeed: 8
   LadderSpeed: 5
-  JumpHeight: 2.5
+  JumpHeight: 3
   JumpLimitTime: 3
   WallJumpLimitTIme: 0.25
   DashCurve:
