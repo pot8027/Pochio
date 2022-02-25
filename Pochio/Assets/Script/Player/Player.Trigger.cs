@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 
 using Assets.Script.Game;
+using Assets.Script.Collider;
 
 namespace Assets.Script.Player
 {
@@ -42,7 +43,7 @@ namespace Assets.Script.Player
 
                 collision.enabled = false;
                 SpeedLevel++;
-                SpeedX += 2f;
+                SpeedX += 1.0f;
                 Destroy(collision.gameObject);
             }
 
@@ -73,12 +74,19 @@ namespace Assets.Script.Player
                 GameController.GetInstance.AddScore();
                 Destroy(collision.gameObject);
 
-                // げーむくりあ
-                if (GameController.GetInstance.IsClear())
-                {
-                    GameController.GetInstance.TimerStop();
-                    ClearText.GetComponent<Text>().enabled = true;
-                }
+                //// げーむくりあ
+                //if (GameController.GetInstance.IsClear())
+                //{
+                //    GameController.GetInstance.TimerStop();
+                //    ClearText.GetComponent<Text>().enabled = true;
+                //}
+            }
+
+            // ゴール
+            else if (collision.tag == Tag.GOAL)
+            {
+                GameController.GetInstance.TimerStop();
+                ClearText.GetComponent<Text>().enabled = true;
             }
 
             // 再スタートアイテム

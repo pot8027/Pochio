@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    private bool _isGround = false;
-    private bool _isEnter = false;
-    private bool _isStay = false;
-    private bool _isExit = false;
+    public GameObject GroundObject { get; private set; }
 
-    private Transform _transform;
-    private Vector3 _defaultScale;
+    protected bool _isGround = false;
+    protected bool _isEnter = false;
+    protected bool _isStay = false;
+    protected bool _isExit = false;
+
+    protected Transform _transform;
+    protected Vector3 _defaultScale;
 
     public void Awake()
     {
@@ -47,26 +49,33 @@ public class GroundCheck : MonoBehaviour
         _isGround = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual bool IsTarget(Collider2D collision)
     {
         if (collision.tag.Equals(Tag.GROUND))
         {
-            _isEnter = true;
+            return true;
         }
 
         else if (collision.tag.Equals(Tag.MOVE_GROUND))
         {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (IsTarget(collision))
+        {
             _isEnter = true;
+            GroundObject = collision.gameObject;
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag.Equals(Tag.GROUND))
-        {
-            _isStay = true;
-        }
-        else if (collision.tag.Equals(Tag.MOVE_GROUND))
+        if (IsTarget(collision))
         {
             _isStay = true;
         }
@@ -74,13 +83,10 @@ public class GroundCheck : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag.Equals(Tag.GROUND))
+        if (IsTarget(collision))
         {
             _isExit = true;
-        }
-        else if (collision.tag.Equals(Tag.MOVE_GROUND))
-        {
-            _isExit = true;
+            GroundObject = null;
         }
     }
 }

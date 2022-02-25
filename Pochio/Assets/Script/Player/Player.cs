@@ -42,6 +42,7 @@ namespace Assets.Script.Player
             {
                 UpdateGroundStatus();
                 UpdateFrontWallStatus();
+                UpdateKeyWallStatus();
                 UpdateHeadStatus();
                 UpdateLadderStatus();
             }
@@ -54,6 +55,11 @@ namespace Assets.Script.Player
             // アニメーション更新
             {
                 UpdateAnimation();
+            }
+
+            // 入力アクション
+            {
+                InputAction();
             }
 
             // UI更新

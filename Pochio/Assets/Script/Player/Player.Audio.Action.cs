@@ -9,12 +9,17 @@ namespace Assets.Script.Player
         /// </summary>
         private void PlayPlayerJumpAudio()
         {
-            if (JumpAudioSouce == null)
-            {
-                return;
-            }
+            //if (JumpAudioSouce == null)
+            //{
+            //    return;
+            //}
 
-            JumpAudioSouce.Play();
+            //if (JumpAudioSouce.isPlaying && JumpAudioSouce.time <= 0.2f)
+            //{
+            //    return;
+            //}
+
+            //JumpAudioSouce.Play();
         }
 
         /// <summary>

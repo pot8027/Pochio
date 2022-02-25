@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Script.Player.Controll;
+using UnityEngine;
 
 namespace Assets.Script.Player
 {
@@ -52,6 +53,9 @@ namespace Assets.Script.Player
         [Header("前方チェック")]
         public GroundCheck FrontWall;
 
+        [Header("鍵壁チェック")]
+        public KeyWallCheck KeyWall;
+
         [Header("はしご重なりチェック")]
         public LadderCheck Ladder;
 
@@ -63,6 +67,9 @@ namespace Assets.Script.Player
 
         [Header("歩行効果音")]
         public AudioSource RunAudioSouce;
+
+        [Header("単発効果音")]
+        public AudioSource OneShotAudioSouce;
 
         [Header("クリアテキスト")]
         public GameObject ClearText;
