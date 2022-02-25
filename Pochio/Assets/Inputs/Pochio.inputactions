@@ -305,7 +305,7 @@
                 {
                     "name": "",
                     "id": "75eebddb-cdf6-4059-bb8c-19e29afd671a",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -327,7 +327,7 @@
                 {
                     "name": "",
                     "id": "5d24bd75-600a-43ca-82f2-a48b9a7dd1f8",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
